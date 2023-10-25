@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $name = mysqli_real_escape_string($connection, htmlspecialchars(trim($data->name)));
     $email = mysqli_real_escape_string($connection, trim($data->email));
-    $passwod = trim($data->password);
+    $password = trim($data->password);
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         sendJson(422, 'Invalid Email Address!');
