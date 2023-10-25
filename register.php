@@ -31,13 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = mysqli_real_escape_string($connection, trim($data->email));
     $password = trim($data->password);
 
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        sendJson(422, 'Invalid Email Address!');
-    } elseif (strlen($password) < 8) {
-        sendJson(422, 'Your password must be at least 8 characters long!');
-    } elseif (strlen($name) < 3) {
-        sendJson(422, 'Your name must be at least 3 characters long!');
-    }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) sendJson(422, 'Invalid Email Address!');
+    elseif (strlen($password) < 8) sendJson(422, 'Your password must be at least 8 characters long!');
+    elseif (strlen($name) < 3) sendJson(422, 'Your name must be at least 3 characters long!');
 
     $hash_password = password_hash($password, PASSWORD_DEFAULT);
     $sql = 'SELECT `email` FROM `users` WHERE `email` = \'' . $email . '\';';
@@ -46,10 +42,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($row_num > 0) sendJson(422, 'This E-mail already in use!');
 
-    $sql = 'INSERT INTO `users` (`name`, `email`, `password`) VALUES (\'' . $name . '\', \'' . $email . '\', \'' . $hash_password. '\');';
+    $sql = 'INSERT INTO `users` (`name`, `email`, `password`) VALUES (\'' . $name . '\', \'' . $email . '\', \'' . $hash_password . '\');';
     $query = mysqli_query($connection, $sql);
-    
+
     if ($query) sendJson(201, 'You have successfully registered.');
+    
     sendJson(500, 'Something going wrong.');
 }
 

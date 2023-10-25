@@ -17,22 +17,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         !isset($data->password) ||
         empty(trim($data->email)) ||
         empty(trim($data->password))
-    ) {
-        sendJson(
-            422,
-            'Please fill all the required fields & None of the fields should be empty.',
-            ['required_fields' => ['email', 'password']]
-        );
-    }
+    ) sendJson(
+        422,
+        'Please fill all the required fields & None of the fields should be empty.',
+        ['required_fields' => ['email', 'password']]
+    );
 
     $email = mysqli_real_escape_string($connection, trim($data->email));
     $password = trim($data->password);
 
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        sendJson(422, 'Invalid Email Address!');
-    } elseif (strlen($password) < 8) {
-        sendJson(422, 'Your password must be at least 8 characters long!');
-    }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) sendJson(422, 'Invalid Email Address!');
+    elseif (strlen($password) < 8) sendJson(422, 'Your password must be at least 8 characters long!');
 
     $sql = 'SELECT * FROM `users` WHERE `email` = \'' . $email . '\';';
     $query = mysqli_query($connection, $sql);
